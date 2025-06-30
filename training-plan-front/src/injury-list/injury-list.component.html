@@ -7,7 +7,7 @@
   <th>Szczegóły kontuzji</th>
   </thead>
 <tbody>
-@for (injury of injuries | async; track $index){
+@for (injury of injuries$ | async; track $index){
 <tr>
 <td>
 {{injury.username}}

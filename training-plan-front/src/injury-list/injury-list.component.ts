@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {Injury} from '../entities/injury';
 import {AsyncPipe, DatePipe} from '@angular/common';
 import {Observable, of} from 'rxjs';
+import {TrainingPlanApiService} from '../training-plan-api.service';
 
 
 @Component({
@@ -22,5 +23,14 @@ export class InjuryListComponent {
   ]
 
 injuries$!: Observable<Injury[]>;
+
+  private trainingPlanService = inject(TrainingPlanApiService);
+
+downloadInjuries(){
+this.injuries$ = this.trainingPlanService.getInjuries();
+}
+  constructor() {
+  this.downloadInjuries()
+  }
 
 }
