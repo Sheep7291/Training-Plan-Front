@@ -1,7 +1,8 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {TrainingPlanApiService} from '../training-plan-api.service';
 import {Router} from '@angular/router';
+import {LocalStorageService} from '../local-storage.service';
 
 @Component({
   selector: 'app-login',
@@ -12,10 +13,11 @@ import {Router} from '@angular/router';
   standalone: true,
   styleUrl: './login.component.scss'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   trainingPlanApi = inject(TrainingPlanApiService)
   errorMessage='';
+  localStorageService = inject(LocalStorageService);
   constructor(private formBuilder: FormBuilder, private router: Router) {
     this.loginForm = this.formBuilder.group({
       username:['', [Validators.required, Validators.minLength(5), Validators.maxLength(15)]],
@@ -30,7 +32,7 @@ export class LoginComponent {
         .subscribe({
           next: (response: any) => {
             if (response === true){
-
+              this.trainingPlanApi.addAuthorizationheader()
               this.router.navigate(['/home'])
             }
 
@@ -41,8 +43,14 @@ export class LoginComponent {
       this.errorMessage = 'Please fill in all the required fields.';
     }
 
+
   }
 
+  ngOnInit() {
+    if(this.localStorageService.getItemsLenght()>0){
+      this.router.navigate(['/home'])
+    }
+  }
 
 
 }

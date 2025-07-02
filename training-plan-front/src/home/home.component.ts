@@ -1,9 +1,13 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {TrainingPlanApiService} from '../training-plan-api.service';
+import {RouterLink, RouterLinkActive} from '@angular/router';
 
 @Component({
   selector: 'app-home',
-  imports: [],
+  imports: [
+    RouterLink,
+    RouterLinkActive
+  ],
   templateUrl: './home.component.html',
   standalone: true,
   styleUrl: './home.component.scss'
@@ -17,6 +21,10 @@ export class HomeComponent implements OnInit{
 
   ngOnInit() {
     this.trainingPlanApi.setUserRoles()
+  }
+
+  logout(){
+    this.trainingPlanApi.logout()
   }
 
 

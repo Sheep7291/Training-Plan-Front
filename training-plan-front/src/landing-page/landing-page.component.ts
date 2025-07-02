@@ -1,11 +1,15 @@
 import { Component } from '@angular/core';
-import {Router} from '@angular/router';
+import {Router, RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
 import {LocalStorageService} from '../local-storage.service';
 import {routes} from '../app/app.routes';
 
 @Component({
   selector: 'app-landing-page',
-  imports: [],
+  imports: [
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive
+  ],
   templateUrl: './landing-page.component.html',
   standalone: true,
   styleUrl: './landing-page.component.scss'
@@ -17,7 +21,7 @@ export class LandingPageComponent {
     protected readonly onclick = onclick;
 
     clickLogin(): void {
-      if (localStorage.length>0){
+      if (this.localStorageService.getItemsLenght()>0){
         this.router.navigate(['home'])
       }
       else{
@@ -25,4 +29,14 @@ export class LandingPageComponent {
       }
 
     }
+
+
+  clickRegister() {
+      if (this.localStorageService.getItemsLenght()>0){
+      this.router.navigate(['home'])
+        }
+      else{
+        this.router.navigate(['register'])
+      }
+  }
 }

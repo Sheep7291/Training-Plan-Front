@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
@@ -16,11 +16,14 @@ export class LocalStorageService {
   }
 
   getItem(key:string) {
-    const data = localStorage.getItem(key)
-    return data
+    return localStorage.getItem(key)
   }
 
   removeItem(key:string) {
     localStorage.removeItem(key)
+  }
+
+  getItemsLenght() {
+    return localStorage.length;
   }
 }

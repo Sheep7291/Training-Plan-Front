@@ -11,68 +11,96 @@ import {LocalStorageService} from './local-storage.service';
 })
 export class TrainingPlanApiService {
   private localStorage = inject(LocalStorageService)
-  private apiUrl ="http://localhost:8080/api";
-  private authorizationHeader= '';
+  private apiUrl = "http://localhost:8080/api";
+  private authorizationHeader = '';
   private http = inject(HttpClient);
   private router = inject(Router);
   private userRoles: string = ''
   private username = "";
-  constructor() { }
 
-  login(username: string, password: string){
-    let crypt = btoa(username +':' + password)
+  constructor() {
+  }
+
+  login(username: string, password: string) {
+    let crypt = btoa(username + ':' + password)
     let authorizationHeader = 'Basic ' + crypt;
     this.authorizationHeader = authorizationHeader;
     this.username = username;
     return this.http
       .get(`${this.apiUrl}/users/check-if-user-is-logged`,
-        {headers: {
-          Authorization: authorizationHeader,
-          }})
-  }
-
-  addAuthorizationheader(AuthorizationHeader:string){
-    localStorage.setItem('AuthorizationHeader',AuthorizationHeader);
-  }
-
-  getUserRoles():Observable<String>{
-    return this.http.get<String>(`${this.apiUrl}/users/get-self-roles`, {headers:
         {
-          Authorization: this.authorizationHeader
-        }})
+          headers: {
+            Authorization: authorizationHeader,
+          }
+        })
+  }
+
+  addAuthorizationheader() {
+    localStorage.setItem('AuthorizationHeader', this.authorizationHeader);
+  }
+
+  getUserRoles(): Observable<String> {
+    return this.http.get<String>(`${this.apiUrl}/users/get-self-roles`, {
+      headers:
+        {
+          Authorization: localStorage.getItem('AuthorizationHeader')!.toString()
+        }
+    })
   }
 
   getInjuries(): Observable<Injury[]> {
     const params = new HttpParams()
       .set('username', this.username)
-return this.http.get<Injury[]>(`${this.apiUrl}/injuries`, {headers:
-    {
-      Authorization: this.authorizationHeader
-    }
-      , params: params});
+    return this.http.get<Injury[]>(`${this.apiUrl}/injuries`, {
+      headers:
+        {
+          Authorization: this.authorizationHeader
+        }
+      , params: params
+    });
+  }
+
+  logout() {
+    localStorage.clear();
   }
 
   getMyTrainingPlans(): Observable<TrainingPlan[]> {
-    return this.http.get<TrainingPlan[]>(`${this.apiUrl}/training-plans`, {headers:
-    {
-      Authorization: this.authorizationHeader
-    }})
+    return this.http.get<TrainingPlan[]>(`${this.apiUrl}/training-plans`, {
+      headers:
+        {
+          Authorization: localStorage.getItem('AuthorizationHeader')!.toString()
+        }
+    })
   }
 
   getTodayTrainingPlan(): Observable<TrainingPlan> {
-    return this.http.get<TrainingPlan>(`${this.apiUrl}/training-plans`, {headers:
+    return this.http.get<TrainingPlan>(`${this.apiUrl}/training-plans`, {
+      headers:
         {
-          Authorization: this.authorizationHeader
-        }})
+          Authorization: localStorage.getItem('AuthorizationHeader')!.toString()
+        }
+    })
 
   }
 
-  setUserRoles(){
+  setUserRoles() {
     this.getUserRoles().subscribe(
       {
-        next: (roles) => {this.userRoles = (roles as any).message;
-        console.log(this.userRoles.toString());}
+        next: (roles) => {
+          this.userRoles = (roles as any).message;
+          console.log(this.userRoles.toString());
+        }
       }
     );
+  }
+
+  register(username: string, password: string) {
+    const params = new HttpParams()
+      .set('username', username)
+      .set('password', password);
+    return this.http.get<String>(`${this.apiUrl}/users/register`, {
+      params: params
+    })
+
   }
 }
