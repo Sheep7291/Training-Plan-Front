@@ -1,12 +1,13 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {TrainingPlanApiService} from '../training-plan-api.service';
-import {RouterLink, RouterLinkActive} from '@angular/router';
+import {RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
 
 @Component({
   selector: 'app-home',
   imports: [
     RouterLink,
-    RouterLinkActive
+    RouterLinkActive,
+    RouterOutlet
   ],
   templateUrl: './home.component.html',
   standalone: true,

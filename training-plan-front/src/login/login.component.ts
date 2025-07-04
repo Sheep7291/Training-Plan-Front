@@ -33,6 +33,7 @@ export class LoginComponent implements OnInit {
           next: (response: any) => {
             if (response === true){
               this.trainingPlanApi.addAuthorizationheader()
+              this.trainingPlanApi.addUsername()
               this.router.navigate(['/home'])
             }
 

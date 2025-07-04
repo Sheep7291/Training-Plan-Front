@@ -1,1 +1,30 @@
-<p>register works!</p>
+<div class="login-container">
+  <h2>Login</h2>
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <div>
+      <label for="username">Username </label>
+      <input id="username" type="text" formControlName="username">
+      @if (registerForm.get('username')?.invalid && registerForm.get('username')?.touched) {
+        <div>
+          Username is required
+        </div>
+      }
+    </div>
+    <div>
+      <label for="password">Password </label>
+      <input id="password" type="text" formControlName="password">
+      @if (registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
+        <div>
+          Password is required
+        </div>
+      }
+    </div>
+    <button type="submit" [disabled]="registerForm.invalid">Submit</button>
+  </form>
+
+  @if(errorMessage){
+    <div class =error-message>
+      {{errorMessage}}
+    </div>
+  }
+</div>
