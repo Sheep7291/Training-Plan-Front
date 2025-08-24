@@ -1,7 +1,7 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {Injury} from '../entities/injury';
 import {AsyncPipe, DatePipe} from '@angular/common';
-import {Observable, of} from 'rxjs';
+import {Observable, of, Subscription} from 'rxjs';
 import {TrainingPlanApiService} from '../training-plan-api.service';
 
 
@@ -15,22 +15,30 @@ import {TrainingPlanApiService} from '../training-plan-api.service';
   standalone: true,
   styleUrl: './injury-list.component.scss'
 })
-export class InjuryListComponent {
-
-  injuries: Injury[] =[
-    {username: 'Sheep', nameOfInjury: 'test injury', timeWhenInjuryHappen: new Date(Date.now()), source: 'trainig-plan'},
-    {username: 'Sheep2', nameOfInjury: 'test injury2', timeWhenInjuryHappen: new Date(Date.now()), source: 'trainig-plan2'},
-  ]
-
-injuries$!: Observable<Injury[]>;
-
+export class InjuryListComponent implements OnDestroy {
   private trainingPlanService = inject(TrainingPlanApiService);
 
-downloadInjuries(){
-this.injuries$ = this.trainingPlanService.getInjuries();
-}
-  constructor() {
-  this.downloadInjuries()
+  sub!: Subscription;
+  injuries: Injury[] = [];
+
+  search(username:string): void{
+    this.sub = this.trainingPlanService.getInjuriesByUsername(username).subscribe(injuries => this.injuries = injuries);
   }
+
+  ngOnDestroy(): void {
+    this.sub.unsubscribe()
+  }
+
+
+
+
+
+
+
+
+
+
+
+
 
 }

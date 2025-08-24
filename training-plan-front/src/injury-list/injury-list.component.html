@@ -1,3 +1,5 @@
+<input #username type="text" placeholder="Wpisz username"/>
+<button (click)="search(username.value)")>Szukaj</button>
 <table>
   <thead>
   <th>Użytkownik</th>
@@ -6,22 +8,4 @@
   <th>Źródło kontuzji
   <th>Szczegóły kontuzji</th>
   </thead>
-<tbody>
-@for (injury of injuries$ | async; track $index){
-<tr>
-<td>
-{{injury.username}}
-  </td>
-  <td class="">
-{{injury.nameOfInjury}}
-  </td>
-  <td class="">
-{{injury.timeWhenInjuryHappen | date:"YYYY-MM-dd"}}
-  </td>
-  <td class="{{injury.source === 'training plan' ? 'training plan source' : ''  }}">
-{{injury.source}}
-  </td>
-</tr>
-}
-</tbody>
 </table>

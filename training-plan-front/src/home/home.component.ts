@@ -1,6 +1,7 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, inject, Inject, OnInit} from '@angular/core';
 import {TrainingPlanApiService} from '../training-plan-api.service';
-import {RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
+import {Router, RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
+import {LocalStorageService} from '../local-storage.service';
 
 @Component({
   selector: 'app-home',
@@ -14,14 +15,24 @@ import {RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
   styleUrl: './home.component.scss'
 })
 export class HomeComponent implements OnInit{
+  localStorageService = inject(LocalStorageService);
+  router = inject(Router)
+  isTrainer: boolean = false;
+  isAdmin: boolean = false;
+  trainingPlanApi = inject(TrainingPlanApiService);
 
-
-
-  constructor(private trainingPlanApi: TrainingPlanApiService) {
-  }
 
   ngOnInit() {
+    if(this.localStorageService.getItemsLenght()<=0){
+      this.router.navigate(['/login'])
+    }
     this.trainingPlanApi.setUserRoles()
+    if(this.trainingPlanApi.getUserRoles().includes("TRAINER")){
+      this.isTrainer = true;
+    }
+    if(this.trainingPlanApi.getUserRoles().includes("ADMIN")){
+      this.isTrainer = true;
+    }
   }
 
   logout(){

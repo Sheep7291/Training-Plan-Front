@@ -1,7 +1,16 @@
 <nav class="navbar">
   <div class="logo"></div>
   <div class="nav_links">
-    <a routerLink="/home/injuries" routerLinkActive="active">TEST</a>
+    <a> routerLink="</a>
+    @if (isTrainer || isAdmin){
+      <a routerLink="/home/injuries" routerLinkActive="active">Injuries</a>
+    }
+    @if(!isAdmin && !isTrainer){
+      <a>test</a>
+    }
+
+    <a routerLink="/home/my-injuries" routerLinkActive="active">My Injuries</a>
+
   </div>
 </nav>
 <router-outlet></router-outlet>

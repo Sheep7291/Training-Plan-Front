@@ -36,24 +36,28 @@ export class TrainingPlanApiService {
   }
 
   addAuthorizationheader() {
-    localStorage.setItem('AuthorizationHeader', this.authorizationHeader);
+    this.localStorage.setItem('AuthorizationHeader', this.authorizationHeader);
   }
 
   addUsername(){
-    localStorage.setItem('Username', this.username)
+    this.localStorage.setItem('Username', this.username)
   }
 
   addRoles(){
     localStorage.setItem('Roles', this.userRoles)
   }
 
-  getUserRoles(): Observable<String> {
+  getUserRolesFromApi(): Observable<String> {
     return this.http.get<String>(`${this.apiUrl}/users/get-self-roles`, {
       headers:
         {
           Authorization: localStorage.getItem('AuthorizationHeader')!.toString()
         }
     })
+  }
+
+  getUserRoles(): string {
+    return this.userRoles
   }
 
   getInjuries(): Observable<Injury[]> {
@@ -92,7 +96,7 @@ export class TrainingPlanApiService {
   }
 
   setUserRoles() {
-    this.getUserRoles().subscribe(
+    this.getUserRolesFromApi().subscribe(
       {
         next: (roles) => {
           this.userRoles = (roles as any).message;
@@ -111,5 +115,17 @@ export class TrainingPlanApiService {
       params: params
     })
 
+  }
+
+  getInjuriesByUsername(username: string):Observable<Injury[]> {
+    const  params = new HttpParams()
+      .set('username', username)
+    return this.http.get<Injury[]>(`${this.apiUrl}/injuries`, {
+      headers:
+        {
+          Authorization: localStorage.getItem('AuthorizationHeader')!.toString()
+        }
+      , params: params
+    });
   }
 }
