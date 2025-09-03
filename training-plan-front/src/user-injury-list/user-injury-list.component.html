@@ -6,18 +6,19 @@
   <th>Szczegóły kontuzji</th>
   </thead>
   <tbody>
-    @for (injury of injuries; track injury.timeWhenInjuryHappen){
-  <tr>
+    @for (injury of injuries; track injury.timeWhenInjuryHappen) {
+      <tr>
         <td class="">
-          {{injury.nameOfInjury}}
+          {{ injury.nameOfInjury }}
         </td>
         <td class="">
-          {{injury.timeWhenInjuryHappen | date:"YYYY-MM-dd"}}
+          {{ injury.timeWhenInjuryHappen | date:"YYYY-MM-dd" }}
         </td>
         <td class="{{injury.source === 'training plan' ? 'training plan source' : ''  }}">
-          {{injury.source}}
+          {{ injury.source }}
         </td>
       </tr>
     }
+  <div class="alert alert=danger" *ngIf="errorMessage">{{ errorMessage }}</div>
   </tbody>
 </table>

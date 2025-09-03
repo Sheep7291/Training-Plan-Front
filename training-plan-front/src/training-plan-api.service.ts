@@ -1,10 +1,11 @@
 import {inject, Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
 import {Router} from '@angular/router';
-import {Observable} from 'rxjs';
+import {catchError,  Observable, throwError} from 'rxjs';
 import {Injury} from './entities/injury';
 import {TrainingPlan} from './entities/training-plan';
 import {LocalStorageService} from './local-storage.service';
+import {HttpErrorService} from './http-error.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,7 @@ export class TrainingPlanApiService {
   private router = inject(Router);
   private userRoles: string = ''
   private username = "";
+  private errorService = inject(HttpErrorService)
 
   constructor() {
   }
@@ -69,7 +71,10 @@ export class TrainingPlanApiService {
           Authorization: localStorage.getItem('AuthorizationHeader')!.toString()
         }
       , params: params
-    });
+    })
+      .pipe(
+        catchError(error => this.handleError(error))
+      )
   }
 
   logout() {
@@ -83,6 +88,9 @@ export class TrainingPlanApiService {
           Authorization: localStorage.getItem('AuthorizationHeader')!.toString()
         }
     })
+      .pipe(
+        catchError(error => this.handleError(error))
+      )
   }
 
   getTodayTrainingPlan(): Observable<TrainingPlan> {
@@ -92,6 +100,9 @@ export class TrainingPlanApiService {
           Authorization: localStorage.getItem('AuthorizationHeader')!.toString()
         }
     })
+      .pipe(
+        catchError(error => this.handleError(error))
+      )
 
   }
 
@@ -126,6 +137,14 @@ export class TrainingPlanApiService {
           Authorization: localStorage.getItem('AuthorizationHeader')!.toString()
         }
       , params: params
-    });
+    })
+      .pipe(
+        catchError(error => this.handleError(error))
+      )
+  }
+
+  private handleError(err: HttpErrorResponse):Observable<never> {
+    const formattedMessage = this.errorService.formatError(err);
+      return throwError(() => formattedMessage)
   }
 }
